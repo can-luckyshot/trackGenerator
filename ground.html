@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Experiment grond oneindig met mooi gras</title>
+<meta charset="utf-8">
+</head>
+<body>
+
+	<div id="container"></div>
+	<div id="geocodeBox"></div>
+	<script src="lib/three.min.js"></script>
+	<script src="lib/Detector.js"></script>
+	<script src="lib/stats.min.js"></script>
+	<script src="lib/FirstPersonControls.js"></script>
+	<script>
+		var scene;
+		var clock = new THREE.Clock();
+		var controls;
+		init();
+		animate();
+
+		function init() {
+			var container = document.getElementById('container');
+			renderer = new THREE.WebGLRenderer({
+				antialias : 16
+			});
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.gammaInput = true;
+			renderer.gammaOutput = true;
+			container.appendChild(renderer.domElement);
+			// camera
+			camera = new THREE.PerspectiveCamera(45, 800 / 600, 1, 100000);
+			camera.position.y = 180;
+			camera.position.z = 1500;
+			// controls
+			controls = new THREE.FirstPersonControls(camera);
+			controls.movementSpeed = 1000;
+			controls.lookSpeed = 0.1;
+			// scene
+			scene = new THREE.Scene();
+			makeGroundPlane();
+			scene.add(new THREE.AmbientLight(0x666666));
+		}
+
+		function animate() {
+			requestAnimationFrame(animate);
+			render();
+		}
+
+		function render() {
+			controls.update( clock.getDelta() );
+			renderer.render(scene, camera);
+		}
+
+		function makeGras() {
+			var loader = new THREE.TextureLoader();
+			loader.load('textures/grasslight-big.jpg', function(groundTexture) {
+
+				groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
+				groundTexture.repeat.set(2500, 2500);
+				groundTexture.anisotropy = 16;
+
+				var groundMaterial = new THREE.MeshPhongMaterial({
+					color : 0xffffff,
+					specular : 0x111111,
+					map : groundTexture
+				});
+				var groundMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000000, 2000000), groundMaterial);
+				groundMesh.position.y = -250;
+				groundMesh.rotation.x = -Math.PI / 2;
+
+				console.log("grass loaded");
+				scene.add(groundMesh);
+
+			});
+		}
+	</script>
