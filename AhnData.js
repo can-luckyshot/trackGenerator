@@ -1,14 +1,14 @@
 var ahn_url = "http://geodata.nationaalgeoregister.nl/ahn2/wms?";
 
-function getAhnFoto(minX, minY, maxX, maxY, onSucces) {
+function getAhnFoto(minX, minY, maxX, maxY,size, onSucces) {
 	var url = "http://geodata.nationaalgeoregister.nl/ahn2/wms?";
 	url += "bbox=" + minX + "," + minY + "," + maxX + "," + maxY;
 	url += "&service=wms";
 	url += "&VERSION=1.1.1";
 	url += "&REQUEST=GetMap";
 	url += "&LAYERS=ahn2_05m_non";
-	url += "&WIDTH=1024";
-	url += "&HEIGHT=1024";
+	url += "&WIDTH="+size;
+	url += "&HEIGHT="+size;
 	url += "&FORMAT=image/png";
 	url += "&SRS=EPSG:28992"
 	var loader = new THREE.ImageLoader();
@@ -30,13 +30,19 @@ function color2height(color) {
 function getHeightMap(image) {
 	var imageData = getImageData(image);
 	var heightMap = [];
+	var min = 10000;
+	var max = -10000;
 	for (var x = 0; x < image.width; x++) {
 		for (var y = 0; y < image.height; y++) {
 			var c = getPixel(imageData, y, x);
 			var h = color2height(c);
+			min = Math.min(min,h);
+			max = Math.max(max,h);
 			heightMap.push(h);
 		}
 	}
+	console.log("min height: "+min);
+	console.log("max height: "+max);
 	return heightMap;
 }
 
