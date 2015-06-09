@@ -1,12 +1,47 @@
-var spoortak_url = "http://mapservices.prorail.nl/arcgis/rest/services/Spoortakken_001/MapServer/0/query?";
+//var spoortak_url = "http://mapservices.prorail.nl/arcgis/rest/services/Spoortakken_001/MapServer/0/query?";
 var sein_url = "http://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten/MapServer/14/query?";
-var foto_url = "http://mapservices.prorail.nl/arcgis/rest/services/Luchtfoto_001/MapServer/export?";
+var pr_foto_url = "http://mapservices.prorail.nl/arcgis/rest/services/Luchtfoto_001/MapServer/export?";
+var wissel_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/4/query?"
+var wissel_math_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/2/query?"
+var kruis_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/5/query?"
+var spoortak_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/3/query?"
+var overweg_vloer_url = "http://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten_002/MapServer/22/query?"
+var overweg_punt_url = "http://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten_002/MapServer/21/query?"
 
 function getSpoortakken(geocode, onSucces) {
+	getGeomVanGeocode(spoortak_url, geocode, onSucces);
+}
+
+function getWissels(geocode, onSucces) {
+	getGeomVanGeocode(wissel_url, geocode, onSucces);
+}
+
+function getWisselNamen(geocode, onSucces) {
+	getGeomVanGeocode(wissel_math_url, geocode, onSucces);
+}
+
+function getKruizen(geocode, onSucces) {
+	getGeomVanGeocode(kruis_url, geocode, onSucces);
+}
+
+function getOverwegVloeren(geocode, onSucces) {
+	getGeomVanGeocode(overweg_vloer_url, geocode, onSucces);
+}
+
+function getOverwegNamen(geocode, onSucces) {
+	getGeomVanGeocode(overweg_punt_url, geocode, onSucces);
+}
+
+function getSeinen(geocode, onSucces) {
+	getGeomVanGeocode(sein_url, geocode, onSucces);
+}
+
+function getGeomVanGeocode(url, geocode, onSucces) {
 	$.ajax({
-		url : spoortak_url,
+		url : url,
 		data : {
-			where : "'" + geocode + "' in(GEOCODE_BEGIN,GEOCODE_EIND)",
+			where : "GEOCODE=" + geocode,
+			outFields : '*',
 			returnGeometry : true,
 			f : "pjson"
 		},
@@ -20,52 +55,16 @@ function getSpoortakken(geocode, onSucces) {
 	});
 }
 
-function getSeinen(geocode, onSucces) {
-	$.ajax({
-		url : sein_url,
-		data : {
-			where : "GEOCODE = '" + geocode + "'",
-			returnGeometry : true,
-			f : "pjson",
-			outFields : "*"
-		},
-		dataType : "jsonp",
-		crossDomain : true,
-		cache : false,
-		success : onSucces,
-		error : function(jqXHR, textStatus, errorThrown) {
-			alert(errorThrown);
-		},
-	});
-}
-function getTileDefs(minX, minY, maxX, maxY) {
-	minX = minX - (minX % 1000);
-	minY = minY - (minY % 1000);
-	maxX = maxX - (maxX % 1000);
-	maxY = maxY - (maxY % 1000);
-	var xRange = maxX - minX;
-	var yRange = maxY - minY;
-	var tiles = xRange / 1000
-}
-
-function getFoto(minX, minY, maxX, maxY, onSucces) {
-	$.ajax({
-		url : foto_url,
-		data : {
-			bbox : minX + "," + minY + "," + maxX + "," + maxY,
-			returnGeometry : true,
-			transparant : false,
-			format : "png",
-			dpi : 96,
-			size : "512,512",
-			f : "json"
-		},
-		dataType : "jsonp",
-		crossDomain : true,
-		cache : false,
-		success : onSucces,
-		error : function(jqXHR, textStatus, errorThrown) {
-			alert(errorThrown);
-		},
-	});
+function getProRailLuchtFoto(minX, minY, maxX, maxY, size, onSucces) {
+	var url = pr_foto_url;
+	url += "bbox=" + minX + "," + minY + "," + maxX + "," + maxY;
+	url += "&transparent=true";
+	url += "&size=" + size + "," + size;
+	url += "&dpi=96";
+	url += "&format=png";
+	url += "&f=image";
+	console.log("luchtfoto url: " + url);
+	var loader = new THREE.ImageLoader();
+	loader.crossOrigin = true;
+	loader.load(url, onSucces);
 }
