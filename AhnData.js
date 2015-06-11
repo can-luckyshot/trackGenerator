@@ -1,12 +1,12 @@
 var ahn_url = "http://geodata.nationaalgeoregister.nl/ahn2/wms?";
 
 function getAhnFoto(minX, minY, maxX, maxY,size, onSucces) {
-	var url = "http://geodata.nationaalgeoregister.nl/ahn2/wms?";
+	var url = ahn_url;
 	url += "bbox=" + minX + "," + minY + "," + maxX + "," + maxY;
 	url += "&service=wms";
 	url += "&VERSION=1.1.1";
 	url += "&REQUEST=GetMap";
-	url += "&LAYERS=ahn2_05m_non";
+	url += "&LAYERS=ahn2_05m_ruw";
 	url += "&WIDTH="+size;
 	url += "&HEIGHT="+size;
 	url += "&FORMAT=image/png";

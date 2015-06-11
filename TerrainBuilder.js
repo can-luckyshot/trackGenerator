@@ -12,7 +12,7 @@ function loadExtent(extent) {
 	console.log("height: " + maxY - minY);
 
 	// maakTerrainOutline(minX, minY, maxX, maxY, 16);
-	maakWaterlijn(minX, minY, maxX, maxY);
+	//maakWaterlijn(minX, minY, maxX, maxY);
 	loadHeight(minX, minY, maxX, maxY, 8);
 }
 
@@ -27,23 +27,21 @@ function loadHeight(minX, minY, maxX, maxY, tiles) {
 		var data = getHeightMap(image);
 		var step = size / tiles;
 		var half_step = step / 2;
-		for (var tile_y = 0; tile_y < tiles; tile_y += 1) {
+		THREE.ImageUtils.crossOrigin = true;
+		for (var tile_y = 0; tile_y < tiles; tile_y++) {
 			for (var tile_x = 0; tile_x < tiles; tile_x++) {
-				var tile_minX = minX - (tile_x * step);
-				var tile_minY = minY - (tile_y * step);
-				var tile_maxX = tile_minX + step;
-				var tile_maxY = tile_minY + step;
 				var tile_data = getTileData(data, tile_x, tile_y, tiles);
-				var tileX = (tile_minX - (step / 2)) - world_offsetx;
-				var tileZ = (maxY - ((tile_y * step) + step / 2))
+				var tileX = (minX - ((tile_x * step) + (step / 2)))
+						- world_offsetx;
+				var tileZ = (maxY - ((tile_y * step) + (step / 2)))
 						- world_offsetz;
-				createHeightPlaneLOD(tile_data, undefined, tileX, tileZ, step);
-				// getProRailLuchtFoto(tile_minX, tile_minY, tile_maxX,
-				// tile_maxY,
-				// 512, function(luchtfoto) {
-				// console.log("luchtfoto is binnen");
-				//
-				// });
+				var x1 = minX + (tile_x * step);
+				var x2 = minX + (tile_x * step) + step;
+				var y1 = maxY - (tile_y * step);
+				var y2 = maxY - (tile_y * step) - step;
+				var luchtFotoUrl = getProRailLuchtFotoUrl(x1, y1, x2, y2, 1024);
+				var texture = THREE.ImageUtils.loadTexture(luchtFotoUrl);
+				createHeightPlaneLOD(tile_data, texture, tileX, tileZ, step);
 			}
 		}
 
@@ -104,28 +102,28 @@ function getTileData(data, tile_x, tile_y, tiles) {
 	return tileData;
 }
 
-function createHeightPlaneLOD(data, texImage, x, z, size) {
+function createHeightPlaneLOD(data, texture, x, z, size) {
 	var lod = new THREE.LOD();
 
-	var mesh = createHeightPlane(data, texImage, x, z, size, 1);
+	var mesh = createHeightPlane(data, texture, x, z, size, 1);
 	mesh.updateMatrix();
 	mesh.matrixAutoUpdate = false;
 	lod.addLevel(mesh, 100);
 
-	mesh = createHeightPlane(data, texImage, x, z, size, 2);
+	mesh = createHeightPlane(data, texture, x, z, size, 2);
 	mesh.updateMatrix();
 	mesh.matrixAutoUpdate = false;
 	lod.addLevel(mesh, 200);
 
-	mesh = createHeightPlane(data, texImage, x, z, size, 4);
+	mesh = createHeightPlane(data, texture, x, z, size, 4);
 	mesh.updateMatrix();
 	mesh.matrixAutoUpdate = false;
-	lod.addLevel(mesh, 500);
-
-	mesh = createHeightPlane(data, texImage, x, z, size, 16);
+	lod.addLevel(mesh, 300);
+	
+	mesh = createHeightPlane(data, texture, x, z, size, 8);
 	mesh.updateMatrix();
 	mesh.matrixAutoUpdate = false;
-	lod.addLevel(mesh, 2000);
+	lod.addLevel(mesh, 400);
 
 	lod.position.x = x;
 	lod.position.z = z;
@@ -134,7 +132,7 @@ function createHeightPlaneLOD(data, texImage, x, z, size) {
 	scene.add(lod);
 }
 
-function createHeightPlane(data, texImage, x, z, size, detail) {
+function createHeightPlane(data, texture, x, z, size, detail) {
 	var dataSize = Math.sqrt(data.length);
 	// we assume the heightmap is always square
 	var segments = ((dataSize / detail) - 1);
@@ -167,11 +165,9 @@ function createHeightPlane(data, texImage, x, z, size, detail) {
 	materials.push(new THREE.MeshLambertMaterial({
 		color : 0x331300,
 	}));
-	if (texImage) {
-		var texture1 = new THREE.Texture(texImage);
-		texture1.needsUpdate = true;
+	if (texture) {
 		materials.push(new THREE.MeshLambertMaterial({
-			map : texture1,
+			map : texture,
 			transparent : true
 		}));
 	}

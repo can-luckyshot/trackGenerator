@@ -54,8 +54,7 @@ function getGeomVanGeocode(url, geocode, onSucces) {
 		},
 	});
 }
-
-function getProRailLuchtFoto(minX, minY, maxX, maxY, size, onSucces) {
+function getProRailLuchtFotoUrl(minX, minY, maxX, maxY, size) {
 	var url = pr_foto_url;
 	url += "bbox=" + minX + "," + minY + "," + maxX + "," + maxY;
 	url += "&transparent=true";
@@ -64,6 +63,11 @@ function getProRailLuchtFoto(minX, minY, maxX, maxY, size, onSucces) {
 	url += "&format=png";
 	url += "&f=image";
 	console.log("luchtfoto url: " + url);
+	return url;
+}
+
+function getProRailLuchtFoto(minX, minY, maxX, maxY, size, onSucces) {
+	var url = getProRailLuchtFotoUrl(minX, minY, maxX, maxY, size);
 	var loader = new THREE.ImageLoader();
 	loader.crossOrigin = true;
 	loader.load(url, onSucces);
