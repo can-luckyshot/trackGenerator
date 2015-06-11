@@ -3,8 +3,7 @@ var seinPaalTexture = THREE.ImageUtils.loadTexture("textures/seinpaal.png");
 seinPaalTexture.minFilter = THREE.NearestFilter;
 var seinKopTexture = THREE.ImageUtils.loadTexture("textures/sein.png");
 seinKopTexture.minFilter = THREE.NearestFilter;
-var map_step = 1000;
-var tileSize = 256;
+var y_offset = 7.0;
 
 function laadModellen(geocode, statsPanel) {
 	initStats(statsPanel);
@@ -133,7 +132,7 @@ function addPolygon(coords) {
 	}));
 	mesh.rotation.x = -Math.PI / 2;
 	mesh.rotation.z = Math.PI;
-	mesh.position.y = 0.1;
+	mesh.position.y = 0.1+y_offset;
 	scene.add(mesh);
 }
 
@@ -208,7 +207,7 @@ function addOverwegNaam(x, y, text) {
 	var textX = (x) - world_offsetx;
 	var textZ = (y) - world_offsetz;
 	sprite.scale.set(1, 0.5, 1);
-	sprite.position.set(-textX, 2, textZ);
+	sprite.position.set(-textX, 2+y_offset, textZ);
 	scene.add(sprite);
 }
 
@@ -238,7 +237,7 @@ function addWisselNaam(x, y, text) {
 	var textX = (x) - world_offsetx;
 	var textZ = (y) - world_offsetz;
 	sprite.scale.set(1, 0.5, 1);
-	sprite.position.set(-textX, 2, textZ);
+	sprite.position.set(-textX, 2+y_offset, textZ);
 	scene.add(sprite);
 }
 
@@ -318,7 +317,7 @@ function addSeinNummer(x, y, text) {
 	if (text.length > 4) {
 		sprite.scale.set(2, 1, 1);
 	}
-	sprite.position.set(-textX, 9, textZ);
+	sprite.position.set(-textX, 9+y_offset, textZ);
 	scene.add(sprite);
 }
 
@@ -337,11 +336,11 @@ function addSeinKopLOD(x, y) {
 	mesh.matrixAutoUpdate = false;
 	lod.addLevel(mesh, farLod);
 
-	lod.position.y = (5) + (2 / 2.0);
 	var seinX = (x) - world_offsetx;
 	var seinZ = (y) - world_offsetz;
 	lod.position.x = -seinX;
 	lod.position.z = seinZ;
+	lod.position.y = (5) + (2 / 2.0) +y_offset;
 	lod.updateMatrix();
 	lod.matrixAutoUpdate = false;
 	scene.add(lod);
@@ -359,11 +358,11 @@ function addSeinPaalLOD(x, y) {
 	mesh.matrixAutoUpdate = false;
 	lod.addLevel(mesh, 1000);
 
-	lod.position.y = 5 / 2.0;
 	var seinX = (x) - world_offsetx;
 	var seinZ = (y) - world_offsetz;
 	lod.position.x = -seinX;
 	lod.position.z = seinZ;
+	lod.position.y = 5 / 2.0+ y_offset;
 	lod.updateMatrix();
 	lod.matrixAutoUpdate = false;
 	scene.add(lod);
@@ -377,7 +376,8 @@ function addSeinKop(q) {
 		color : 0xffffff,
 		map : seinKopTexture
 	});
-	return new THREE.Mesh(geometry, material);
+	var mesh = new THREE.Mesh(geometry, material);
+	return mesh;
 }
 
 function addSeinPaal(q) {
@@ -389,21 +389,6 @@ function addSeinPaal(q) {
 		map : seinPaalTexture
 	});
 	return new THREE.Mesh(geometry, material);
-}
-function maakPaalSegment(x, y, segNum, color, dia) {
-	var segmentSize = 1;
-	var geometry = new THREE.CylinderGeometry(dia, dia, segmentSize, 32);
-	var material = new THREE.MeshPhongMaterial({
-		color : color,
-		specular : 0x111111
-	});
-	var segment = new THREE.Mesh(geometry, material);
-	segment.position.y = (segNum * segmentSize) + segmentSize / 2.0;
-	var seinX = (x) - world_offsetx;
-	var seinZ = (y) - world_offsetz;
-	segment.position.x = -seinX;
-	segment.position.z = seinZ;
-	scene.add(segment);
 }
 
 function addLine(coords, r, g, b) {
@@ -419,7 +404,7 @@ function addLine(coords, r, g, b) {
 
 		// positions
 		positions[i * 3] = -x;
-		positions[i * 3 + 1] = 0.1;
+		positions[i * 3 + 1] = 0.1+y_offset;
 		positions[i * 3 + 2] = z;
 
 		// colors
