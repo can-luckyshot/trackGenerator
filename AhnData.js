@@ -1,4 +1,4 @@
-var ahn_url = "http://geodata.nationaalgeoregister.nl/ahn2/wms?";
+var ahn_url = "https://geodata.nationaalgeoregister.nl/ahn2/wms?";
 
 function getAhnFoto(minX, minY, maxX, maxY,size, onSucces) {
 	var url = ahn_url;
