@@ -83,8 +83,8 @@ function makeSpoortakken(data) {
 	getWissels(geocode, makeWissels);
 	getWisselNamen(geocode, makeWisselNamen);
 	getKruizen(geocode, makeKruizen);
-	getOverwegVloeren(geocode, makeOverwegen);
-	getOverwegNamen(geocode, makeOverwegNamen);
+	//getOverwegVloeren(geocode, makeOverwegen);
+	//getOverwegNamen(geocode, makeOverwegNamen);
 };
 
 function makeWissels(data) {
