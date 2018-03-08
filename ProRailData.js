@@ -1,12 +1,12 @@
 //var spoortak_url = "http://mapservices.prorail.nl/arcgis/rest/services/Spoortakken_001/MapServer/0/query?";
-var sein_url = "http://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten/MapServer/14/query?";
-var pr_foto_url = "http://mapservices.prorail.nl/arcgis/rest/services/Luchtfoto_001/MapServer/export?";
-var wissel_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/4/query?"
-var wissel_math_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/2/query?"
-var kruis_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/5/query?"
-var spoortak_url = "http://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_001/MapServer/3/query?"
-var overweg_vloer_url = "http://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten_002/MapServer/22/query?"
-var overweg_punt_url = "http://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten_002/MapServer/21/query?"
+var sein_url = "https://mapservices.prorail.nl/arcgis/rest/services/Treinbeveiligingsysteem_002/MapServer/0/query?";
+var pr_foto_url = "https://mapservices.prorail.nl/arcgis/rest/services/Luchtfoto_001/MapServer/export?";
+var wissel_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/3/query?"
+var wissel_math_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/1/query?"
+var kruis_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/query?"
+var spoortak_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/2/query?"
+var overweg_vloer_url = "https://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten_002/MapServer/22/query?"
+var overweg_punt_url = "https://mapservices.prorail.nl/arcgis/rest/services/BBK_spoorobjecten_002/MapServer/21/query?"
 
 function getSpoortakken(geocode, onSucces) {
 	getGeomVanGeocode(spoortak_url, geocode, onSucces);
