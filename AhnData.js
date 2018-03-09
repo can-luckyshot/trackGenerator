@@ -10,21 +10,29 @@ function getAhnFoto(minX, minY, maxX, maxY,size, onSucces) {
 	url += "&WIDTH="+size;
 	url += "&HEIGHT="+size;
 	url += "&FORMAT=image/png";
-	url += "&SRS=EPSG:28992"
+	url += "&SRS=EPSG:28992";
+	url += "&styles='ahn2:ahn2_05m_detail'"
+	console.log(url);
 	var loader = new THREE.ImageLoader();
 	loader.crossOrigin = true;
 	loader.load(url, onSucces);
 }
 
 function color2height(color) {
+	console.log(color.r + ', '+color.g+', '+color.b);
+	var best_delta = 10000000; 
+	var best_c2h;
 	for (var i = 0; i < rgb2height.length; i++) {
 		var c2h = rgb2height[i];
-		if (c2h.r == color.r && c2h.g == color.g && c2h.b == color.b) {
-			return c2h.h;
+		console.log()
+		var color_delta = Math.abs(c2h.r - color.r)+Math.abs(c2h.g - color.g)+Math.abs(c2h.b - color.b);
+		if (color_delta < best_delta) {
+			best_delta = color_delta;
+			best_c2h = c2h;
 		}
 	}
-	console.log("default height");
-	return -20.0;
+	//console.log("default height: "+color.r + ', '+color.g+', '+color.b);
+	return best_c2h.h;
 }
 
 function getHeightMap(image) {

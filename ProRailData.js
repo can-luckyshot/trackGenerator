@@ -1,6 +1,6 @@
 //var spoortak_url = "http://mapservices.prorail.nl/arcgis/rest/services/Spoortakken_001/MapServer/0/query?";
 var sein_url = "https://mapservices.prorail.nl/arcgis/rest/services/Treinbeveiligingsysteem_002/MapServer/0/query?";
-var pr_foto_url = "https://mapservices.prorail.nl/arcgis/rest/services/Luchtfoto_001/MapServer/export?";
+var pr_foto_url = "https://luchtfoto.prorail.nl/erdas-iws/ogc/wms/Luchtfoto?";
 var wissel_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/3/query?"
 var wissel_math_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/1/query?"
 var kruis_url = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_004/MapServer/query?"
@@ -56,12 +56,16 @@ function getGeomVanGeocode(url, geocode, onSucces) {
 }
 function getProRailLuchtFotoUrl(minX, minY, maxX, maxY, size) {
 	var url = pr_foto_url;
-	url += "bbox=" + minX + "," + minY + "," + maxX + "," + maxY;
+	url += "request=getmap";
+	url += "&bbox=" + minX + "," + minY + "," + maxX + "," + maxY;
 	url += "&transparent=true";
-	url += "&size=" + size + "," + size;
-	url += "&dpi=96";
-	url += "&format=png";
-	url += "&f=image";
+	url += "&width=" + size + "&height=" + size;
+	url += "&format=image/png";
+	url += "&styles=default";
+	url += "&layers=2016";
+	url += "&srs=EPSG:28992";
+	url += "&version=1.1.1";
+	url += "&service=wms";
 	console.log("luchtfoto url: " + url);
 	return url;
 }

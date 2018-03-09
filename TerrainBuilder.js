@@ -8,8 +8,8 @@ function loadExtent(extent) {
 	console.log("minY: " + minY);
 	console.log("maxX: " + maxX);
 	console.log("maxY: " + maxY);
-	console.log("width: " + maxX - minX);
-	console.log("height: " + maxY - minY);
+	console.log("width: " + (maxX - minX));
+	console.log("height: " + (maxY - minY));
 
 	// maakTerrainOutline(minX, minY, maxX, maxY, 16);
 	//maakWaterlijn(minX, minY, maxX, maxY);
@@ -22,7 +22,7 @@ function loadHeight(minX, minY, maxX, maxY, tiles) {
 	var size = Math.max(w, h);
 	maxX = minX + size;
 	maxY = minY + size;
-	getAhnFoto(minX, minY, maxX, maxY, 4096, function(image) {
+	getAhnFoto(minX, minY, maxX, maxY, 256, function(image) {
 		console.log("hoogte data is binnen");
 		var data = getHeightMap(image);
 		var step = size / tiles;
@@ -39,7 +39,7 @@ function loadHeight(minX, minY, maxX, maxY, tiles) {
 				var x2 = minX + (tile_x * step) + step;
 				var y1 = maxY - (tile_y * step);
 				var y2 = maxY - (tile_y * step) - step;
-				var luchtFotoUrl = getProRailLuchtFotoUrl(x1, y1, x2, y2, 1024);
+				var luchtFotoUrl = getProRailLuchtFotoUrl(x1, y2, x2, y1, 1024);
 				var texture = THREE.ImageUtils.loadTexture(luchtFotoUrl);
 				createHeightPlaneLOD(tile_data, texture, tileX, tileZ, step);
 			}
